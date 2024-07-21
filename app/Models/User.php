@@ -4,10 +4,13 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\HasApiTokens;
+use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
 
 class User extends Authenticatable
 {
@@ -45,6 +48,16 @@ class User extends Authenticatable
 
     public function settings(): BelongsToMany
     {
-        return $this->belongsToMany(Setting::class);
+        return $this->belongsToMany(Setting::class)->withPivot(['is_active']);
+    }
+
+    public function channel(): BelongsTo
+    {
+        return $this->BelongsTo(UserChannel::class,'channel_id','id');
+    }
+
+    public function code(): HasOne
+    {
+        return $this->hasOne(UserCode::class);
     }
 }

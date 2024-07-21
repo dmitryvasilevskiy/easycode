@@ -2,15 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
+use App\Notifications\CodeNotification;
 use Illuminate\Console\Command;
+use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
 
 class TestCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:test-command';
 
     /**
@@ -25,6 +23,11 @@ class TestCommand extends Command
      */
     public function handle()
     {
+        $code = '';
+        for ($i = 0; $i < 4; $i++) {
+            $code .= mt_rand(0, 9);
+        };
 
+        User::query()->first()->notify(new CodeNotification($code));
     }
 }
